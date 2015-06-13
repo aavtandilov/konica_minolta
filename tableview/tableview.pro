@@ -1,5 +1,6 @@
 TEMPLATE = app
 TARGET = tableview
+QT += sql
 
 RESOURCES += \
     tableview.qrc

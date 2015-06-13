@@ -40,22 +40,65 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.3
 import org.qtproject.example 1.0
+import QtQuick.Controls.Styles 1.3
+import QtQuick.Dialogs 1.2
+
 
 ApplicationWindow {
     id: window
     visible: true
-    title: "Table View Example"
+    title: "Konica Minolta Kunden Dateibank"
+
+    FileDialog {
+        id: fileDialog
+        visible: false
+        //modality: fileDialogModal.checked ? Qt.WindowModal : Qt.NonModal
+        title: "Choose a file"
+        nameFilters: [ "PDF-Datei (*.pdf)" ]
+        selectedNameFilter: "All files (*)"
+        onAccepted: {
+            console.log("Accepted: " + fileDialog.fileUrls)
+
+
+        }
+        onRejected: { console.log("Rejected") }
+    }
+
+    function append(newElement)
+    {
+    sourceModel.append(newElement)
+    }
 
     toolBar: ToolBar {
+        height: 45
+        style: ToolBarStyle
+        {
+        background:
+            Rectangle
+            {
+            color: "white"
+    }}
+        Image{
+            id: pic
+            source: "pics/konica.png"
+                }
+        Button {
+            text: "Select PDF"
+            anchors.left: pic.right
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: fileDialog.open();
+        }
+
         TextField {
             id: searchBox
 
-            placeholderText: "Search..."
+            placeholderText: "Suchen..."
             inputMethodHints: Qt.ImhNoPredictiveText
 
             width: window.width / 5 * 2
+
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -64,6 +107,7 @@ ApplicationWindow {
     TableView {
         id: tableView
 
+
         frameVisible: false
         sortIndicatorVisible: true
 
@@ -71,25 +115,85 @@ ApplicationWindow {
 
         Layout.minimumWidth: 400
         Layout.minimumHeight: 240
-        Layout.preferredWidth: 600
-        Layout.preferredHeight: 400
+        Layout.preferredWidth: 800
+        Layout.preferredHeight: 600
 
+
+           TableViewColumn {
+        id: checkColumn
+        //title: " "
+        role: "check"
+        movable: false
+        resizable: false
+        width: 20
+        delegate: CheckBox {
+                    id: checkBox
+                     onCheckedChanged: {
+                         //Here is where I want to call setData
+                     }
+                }
+    }
         TableViewColumn {
-            id: titleColumn
-            title: "Title"
-            role: "title"
+            id: idColumn
+            title: "Kundennummer"
+            role: "idnumber"
             movable: false
             resizable: false
-            width: tableView.viewport.width - authorColumn.width
+            width: tableView.viewport.width/6
         }
 
         TableViewColumn {
-            id: authorColumn
-            title: "Author"
-            role: "author"
+            id: nameColumn
+            title: "Kundenname"
+            role: "name"
             movable: false
             resizable: false
-            width: tableView.viewport.width / 3
+            width: tableView.viewport.width / 6
+        }
+
+        TableViewColumn {
+            id: zipColumn
+            title: "PLZ"
+            role: "zip"
+            movable: false
+            resizable: false
+            width: tableView.viewport.width / 6
+        }
+
+        TableViewColumn {
+            id: cityColumn
+            title: "Ort"
+            role: "city"
+            movable: false
+            resizable: false
+            width: tableView.viewport.width / 6
+        }
+
+        TableViewColumn {
+            id: countryColumn
+            title: "Land"
+            role: "country"
+            movable: false
+            resizable: false
+            width: tableView.viewport.width / 6
+        }
+
+        TableViewColumn {
+            id: streetColumn
+            title: "Straße"
+            role: "street"
+            movable: false
+            resizable: false
+            width: tableView.viewport.width / 6
+        }
+
+        TableViewColumn {
+            id: pdfColumn
+            title: "PDF"
+            role: "pdf"
+            movable: false
+            resizable: false
+            width: tableView.viewport.width / 6
         }
 
         model: SortFilterProxyModel {
@@ -105,13 +209,21 @@ ApplicationWindow {
             filterCaseSensitivity: Qt.CaseInsensitive
         }
 
-        ListModel {
+
+
+         ListModel {
             id: sourceModel
-            ListElement {
-                title: "Moby-Dick"
-                author: "Herman Melville"
+
+          ListElement {
+                check: ""
+                idnumber: "75864"
+                name: "Herman Melville"
+                zip: "67663"
+                city: "Kaiserslautern"
+                country: "USA"
+                street: "2121 K Street"
             }
-            ListElement {
+          /*  ListElement {
                 title: "The Adventures of Tom Sawyer"
                 author: "Mark Twain"
             }
@@ -182,7 +294,12 @@ ApplicationWindow {
             ListElement {
                 title: "Herbert West—Reanimator"
                 author: "H. P. Lovecraft"
-            }
+            }*/
+
+
         }
-    }
+
+        }
+
 }
+

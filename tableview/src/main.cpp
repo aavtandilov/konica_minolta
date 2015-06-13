@@ -1,59 +1,93 @@
-/****************************************************************************
-**
-** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/legal
-**
-** This file is part of the Qt Quick Controls module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** You may use this file under the terms of the BSD license as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
-**     of its contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qtquickcontrolsapplication.h"
 #include "sortfilterproxymodel.h"
 #include <QtQml/qqmlapplicationengine.h>
 #include <QtGui/qsurfaceformat.h>
+#include <QStringListModel>
+#include <QList>
+#include <QQuickView>
+#include <QQmlContext>
+#include <QQmlComponent>
+
 #include <QtQml/qqml.h>
+#include "connection.h"
+#include "dataobject.h"
+
+
 
 int main(int argc, char *argv[])
 {
     QtQuickControlsApplication app(argc, argv);
+
+    if (!createConnection())
+        return 1;
+
     if (QCoreApplication::arguments().contains(QLatin1String("--coreprofile"))) {
         QSurfaceFormat fmt;
         fmt.setVersion(4, 4);
         fmt.setProfile(QSurfaceFormat::CoreProfile);
         QSurfaceFormat::setDefaultFormat(fmt);
     }
+
     qmlRegisterType<SortFilterProxyModel>("org.qtproject.example", 1, 0, "SortFilterProxyModel");
-    QQmlApplicationEngine engine(QUrl("qrc:/main.qml"));
+    QQmlApplicationEngine engine;
+
+    QQmlComponent component(&engine, QUrl("qrc:/main.qml"));
+    QObject *object = component.create();
+    QSqlQuery query;
+    query.exec("select * from vendor");
+
+
+    while (query.next()) {
+        QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
+        newElement.insert("check", "check");
+        newElement.insert("idnumber", query.value(0).toString());
+        newElement.insert("name", query.value(1).toString());
+        newElement.insert("zip", query.value(2).toString());
+        newElement.insert("city", query.value(3).toString());
+        newElement.insert("country", query.value(4).toString());
+        newElement.insert("street", query.value(5).toString());
+
+        QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement)));
+
+
+
+
+    //        qDebug() << name << salary;
+    }
+/*
+    for (int i=0; i<20; i++)
+    {
+    QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
+    newElement.insert("idnumber", "1000");
+    newElement.insert("name", "Suzanne Collins");
+    newElement.insert("zip", "12345");
+    newElement.insert("city", "Зажопинск");
+    newElement.insert("country", "RU");
+    newElement.insert("street", "Proletarskaya");
+
+    QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement)));
+    //delete object;
+    }
+*/
+
+
+
+
+
+
+
+//    view.setResizeMode(QQuickView::SizeRootObjectToView);
+
+
+
+
+  //  engine.rootContext()->setContextProperty("myModel", QVariant::fromValue(dataList));
+  //engine.rootContext()->setContextProperty("extraColumn", QVariant::fromValue(dataList));
+  //  engine.rootContext()->setContextProperty("sourceModelV", QVariant::fromValue(dataList));
+//    engine.load(QUrl("qrc:/main.qml"));
+
+
+
+
     return app.exec();
 }

@@ -1,0 +1,16 @@
+DROP TABLE vendor;
+CREATE TABLE vendor(
+  Kundennummer INTEGER(5) NOT NULL PRIMARY KEY 
+, Kundenname VARCHAR(30)
+, Postleitzahl VARCHAR(10)
+, Ort VARCHAR(14)
+, Land VARCHAR(2)
+, Straﬂe VARCHAR(23)
+);
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (10000,'Hamburger Mˆbelgroﬂhandel GmbH','49293','Diepholz','DE','Hamburger Str. 18');
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (20000,'Holz Trading AG','1310','Dresden','DE','Im Industriegebiet 2-14');
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (30000,'Edle Hˆlzer GmbH','99081','Erfurt','DE','Lange Str. 23');
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (40000,'Lange Heimmˆbelbedarf AG','60320','Frankfurt/Main','DE','Randstr. 2-20');
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (50000,'Elektronik Servicing GmbH','1238','Dresden','DE','Am gr¸nen Feld 172');
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (60000,'Apparaturen GmbH','49293','Diepholz','DE','Uferweg 8');
+INSERT INTO vendor(Kundennummer,Kundenname,Postleitzahl,Ort,Land,Straﬂe) VALUES (70000,'Elektronische Ausstattungen AG','20203','Hamburg','DE','Sievekingplatz 10');
