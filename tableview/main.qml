@@ -71,6 +71,17 @@ ApplicationWindow {
     sourceModel.append(newElement)
     }
 
+    function get()
+    {
+        console.log("Map is: " + sourceModel.get(5).idnumber + sourceModel.get(5).name)
+       return sourceModel.get(10).name
+        /*return Map = {
+            idnumber: sourceModel.get(5).idnumber,
+            name: sourceModel.get(5).name
+        }*/
+
+    }
+
     toolBar: ToolBar {
         height: 45
         style: ToolBarStyle
@@ -127,19 +138,40 @@ ApplicationWindow {
         resizable: false
         width: 20
         delegate: CheckBox {
+
                     id: checkBox
+                    checked: sourceModel.get(styleData.row).bool
                      onCheckedChanged: {
-                         //Here is where I want to call setData
+                         sourceModel.set(styleData.row, {"bool": checkBox.checked})
+                        //Here is where I want to call setData
+                console.log("Row: " + sourceModel.get(styleData.row).bool)
+
                      }
                 }
     }
+
+        TableViewColumn {
+        id: checkBool
+        role: "bool"
+        width: 40
+    }
+
+    TableViewColumn {
+    id: indexID
+    role: "index"
+    width: 40
+}
+
         TableViewColumn {
             id: idColumn
             title: "Kundennummer"
             role: "idnumber"
             movable: false
             resizable: false
+          //  visible: false
             width: tableView.viewport.width/6
+
+
         }
 
         TableViewColumn {
@@ -187,14 +219,7 @@ ApplicationWindow {
             width: tableView.viewport.width / 6
         }
 
-        TableViewColumn {
-            id: pdfColumn
-            title: "PDF"
-            role: "pdf"
-            movable: false
-            resizable: false
-            width: tableView.viewport.width / 6
-        }
+
 
         model: SortFilterProxyModel {
             id: proxyModel
@@ -216,6 +241,8 @@ ApplicationWindow {
 
           ListElement {
                 check: ""
+                bool: false
+                index: 0
                 idnumber: "75864"
                 name: "Herman Melville"
                 zip: "67663"

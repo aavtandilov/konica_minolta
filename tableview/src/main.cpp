@@ -10,7 +10,6 @@
 
 #include <QtQml/qqml.h>
 #include "connection.h"
-#include "dataobject.h"
 
 
 
@@ -35,11 +34,13 @@ int main(int argc, char *argv[])
     QObject *object = component.create();
     QSqlQuery query;
     query.exec("select * from vendor");
-
-
+    QList<QVariantMap> mapCopy;
+    int i=1;
     while (query.next()) {
         QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
         newElement.insert("check", "check");
+        newElement.insert("index", i);
+        newElement.insert("bool", false);
         newElement.insert("idnumber", query.value(0).toString());
         newElement.insert("name", query.value(1).toString());
         newElement.insert("zip", query.value(2).toString());
@@ -48,13 +49,24 @@ int main(int argc, char *argv[])
         newElement.insert("street", query.value(5).toString());
 
         QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement)));
+        mapCopy.append(newElement);
+        i++;
+          }
+
+        for (int k=0; k<=i;k++)
+        {
+             if(checked(k))
 
 
+        }
+
+   //  SaveXMLFile();
+        QVariant gotElement;
+        QMetaObject::invokeMethod(object, "get", Q_RETURN_ARG(QVariant, gotElement));
+        qDebug() << gotElement;
 
 
-    //        qDebug() << name << salary;
-    }
-/*
+    /*
     for (int i=0; i<20; i++)
     {
     QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
@@ -91,3 +103,4 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
