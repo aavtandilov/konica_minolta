@@ -124,46 +124,8 @@ static bool createConnection()
 }
 
 
-void SaveXMLFile()
-{
-
-    QString filename = QFileDialog::getSaveFileName(0,
-                                       QObject::tr("XML Export"), ".",
-                                       QObject::tr("XML-Datei (*.xml)"));
 
 
-    QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-
-    QXmlStreamWriter xmlWriter(&file);
-    xmlWriter.setAutoFormatting(true);
-    xmlWriter.writeStartDocument();
-
-    xmlWriter.writeStartElement("KUNDEN");
-
-    for (int i=0; i<5; i++)
-    {
-        xmlWriter.writeStartElement("KUNDE");
-
-        xmlWriter.writeTextElement("KUNDENNUMMER", "statevalue" );
-        xmlWriter.writeTextElement("KUNDENNAME", "roomvalue");
-        xmlWriter.writeTextElement("PLZ", "potencialvalue");
-        xmlWriter.writeTextElement("ORT", "potencialvalue");
-        xmlWriter.writeTextElement("LAND", "potencialvalue");
-        xmlWriter.writeTextElement("STRAßE", "potencialvalue");
-        xmlWriter.writeTextElement("PDF", "potencialvalue");
-
-        xmlWriter.writeEndElement(); //END KUNDE
-    }
-
-    xmlWriter.writeEndElement(); //END KUNDEN
-        file.close();
-
-        if(QFile::rename("C:/Users/Artemiy/Dropbox/konica_minolta/tableview/pics/1.pdf", "C:/Users/Artemiy/Dropbox/konica_minolta/tableview/pics/2.pdf"))
-            qDebug() << "renamed";
-        else qDebug() << "NOT renamed";
-
-}
 
 //! [0]
 

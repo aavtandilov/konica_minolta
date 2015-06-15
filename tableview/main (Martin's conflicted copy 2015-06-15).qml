@@ -51,7 +51,6 @@ ApplicationWindow {
     visible: true
     title: "Konica Minolta Kunden Dateibank"
 
-
     property bool pdfButtonEnabled: true
   //  property string MSG
 
@@ -172,7 +171,7 @@ Button {
 
 
         frameVisible: false
-        sortIndicatorVisible: false //true
+        sortIndicatorVisible: true
 
         anchors.fill: parent
 
@@ -181,7 +180,9 @@ Button {
         Layout.preferredWidth: 800
         Layout.preferredHeight: 600
 
-
+        onSortIndicatorColumnChanged: {console.log("onSortIndicatorColumnChanged")}
+        //MouseArea{
+        //onClicked: checkBox.checked = sourceModel.get(styleData.row).bool}
 
 
            TableViewColumn {
@@ -194,14 +195,19 @@ Button {
         delegate: CheckBox {
 
                     id: checkBox
-
-
                     onClicked: sourceModel.set(styleData.row, {"bool": checkBox.checked})
                     Component.onCompleted: checked = sourceModel.get(styleData.row).bool
                     onVisibleChanged: if (visible) checked = sourceModel.get(styleData.row).bool
 
+                    //onCheckedChanged: {checkBox.checked = sourceModel.get(styleData.row).bool
+                    //console.log("Row: " + styleData.row + sourceModel.get(styleData.row).bool)}
 
+                /*
+                if(checkBox.checked)
+           {
 
+                sourceModel.set(styleData.row, {"bool": checkBox.checked})
+            }       //Here is where I want to call setData */
 
 
                      }
@@ -283,13 +289,15 @@ Button {
             id: proxyModel
             source: sourceModel.count > 0 ? sourceModel : null
 
-            sortOrder: tableView.getColumn(1)//tableView.sortIndicatorOrder
+            sortOrder: tableView.sortIndicatorOrder
             sortCaseSensitivity: Qt.CaseInsensitive
             sortRole: sourceModel.count > 0 ? tableView.getColumn(tableView.sortIndicatorColumn).role : ""
 
             filterString: "*" + searchBox.text + "*"
             filterSyntax: SortFilterProxyModel.Wildcard
             filterCaseSensitivity: Qt.CaseInsensitive
+
+            //onSortRoleChanged: {console.log("Mouse area is pressed?")}
 
 
         }
@@ -310,7 +318,78 @@ Button {
                 country: "USA"
                 street: "2121 K Street"
             }
-
+          /*  ListElement {
+                title: "The Adventures of Tom Sawyer"
+                author: "Mark Twain"
+            }
+            ListElement {
+                title: "Cat’s Cradle"
+                author: "Kurt Vonnegut"
+            }
+            ListElement {
+                title: "Farenheit 451"
+                author: "Ray Bradbury"
+            }
+            ListElement {
+                title: "It"
+                author: "Stephen King"
+            }
+            ListElement {
+                title: "On the Road"
+                author: "Jack Kerouac"
+            }
+            ListElement {
+                title: "Of Mice and Men"
+                author: "John Steinbeck"
+            }
+            ListElement {
+                title: "Do Androids Dream of Electric Sheep?"
+                author: "Philip K. Dick"
+            }
+            ListElement {
+                title: "Uncle Tom’s Cabin"
+                author: "Harriet Beecher Stowe"
+            }
+            ListElement {
+                title: "The Call of the Wild"
+                author: "Jack London"
+            }
+            ListElement {
+                title: "The Old Man and the Sea"
+                author: "Ernest Hemingway"
+            }
+            ListElement {
+                title: "A Streetcar Named Desire"
+                author: "Tennessee Williams"
+            }
+            ListElement {
+                title: "Catch-22"
+                author: "Joseph Heller"
+            }
+            ListElement {
+                title: "One Flew Over the Cuckoo’s Nest"
+                author: "Ken Kesey"
+            }
+            ListElement {
+                title: "The Murders in the Rue Morgue"
+                author: "Edgar Allan Poe"
+            }
+            ListElement {
+                title: "Breakfast at Tiffany’s"
+                author: "Truman Capote"
+            }
+            ListElement {
+                title: "Death of a Salesman"
+                author: "Arthur Miller"
+            }
+            ListElement {
+                title: "Post Office"
+                author: "Charles Bukowski"
+            }
+            ListElement {
+                title: "Herbert West—Reanimator"
+                author: "H. P. Lovecraft"
+            }*/
 
 
         }

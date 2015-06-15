@@ -10,6 +10,7 @@
 
 #include <QtQml/qqml.h>
 #include "connection.h"
+#include "message.h"
 
 
 
@@ -30,7 +31,15 @@ int main(int argc, char *argv[])
     qmlRegisterType<SortFilterProxyModel>("org.qtproject.example", 1, 0, "SortFilterProxyModel");
     QQmlApplicationEngine engine;
 
+    Message msg;
+
+
+    engine.rootContext()->setContextProperty("msg", &msg);
+
     QQmlComponent component(&engine, QUrl("qrc:/main.qml"));
+
+
+
     QObject *object = component.create();
     QSqlQuery query;
     query.exec("select * from vendor");
@@ -52,51 +61,6 @@ int main(int argc, char *argv[])
         mapCopy.append(newElement);
         i++;
           }
-
-        for (int k=0; k<=i;k++)
-        {
-             if(checked(k))
-
-
-        }
-
-   //  SaveXMLFile();
-        QVariant gotElement;
-        QMetaObject::invokeMethod(object, "get", Q_RETURN_ARG(QVariant, gotElement));
-        qDebug() << gotElement;
-
-
-    /*
-    for (int i=0; i<20; i++)
-    {
-    QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
-    newElement.insert("idnumber", "1000");
-    newElement.insert("name", "Suzanne Collins");
-    newElement.insert("zip", "12345");
-    newElement.insert("city", "Зажопинск");
-    newElement.insert("country", "RU");
-    newElement.insert("street", "Proletarskaya");
-
-    QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement)));
-    //delete object;
-    }
-*/
-
-
-
-
-
-
-
-//    view.setResizeMode(QQuickView::SizeRootObjectToView);
-
-
-
-
-  //  engine.rootContext()->setContextProperty("myModel", QVariant::fromValue(dataList));
-  //engine.rootContext()->setContextProperty("extraColumn", QVariant::fromValue(dataList));
-  //  engine.rootContext()->setContextProperty("sourceModelV", QVariant::fromValue(dataList));
-//    engine.load(QUrl("qrc:/main.qml"));
 
 
 
