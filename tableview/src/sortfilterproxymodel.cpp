@@ -75,11 +75,13 @@ void SortFilterProxyModel::setSortRole(const QByteArray &role)
         if (m_complete)
             QSortFilterProxyModel::setSortRole(roleKey(role));
     }
+    emit sortRoleChanged();
 }
 
 void SortFilterProxyModel::setSortOrder(Qt::SortOrder order)
 {
     QSortFilterProxyModel::sort(0, order);
+    emit sortOrderChanged();
 }
 
 QByteArray SortFilterProxyModel::filterRole() const
