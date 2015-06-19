@@ -53,8 +53,8 @@ class SortFilterProxyModel : public QSortFilterProxyModel, public QQmlParserStat
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(QObject *source READ source WRITE setSource)
 
-    Q_PROPERTY(QByteArray sortRole READ sortRole WRITE setSortRole NOTIFY sortRoleChanged)
-    Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder WRITE setSortOrder NOTIFY sortOrderChanged)
+    Q_PROPERTY(QByteArray sortRole READ sortRole WRITE setSortRole)
+    Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder WRITE setSortOrder)
 
     Q_PROPERTY(QByteArray filterRole READ filterRole WRITE setFilterRole)
     Q_PROPERTY(QString filterString READ filterString WRITE setFilterString)
@@ -96,8 +96,6 @@ public:
 
 signals:
     void countChanged();
-    void sortRoleChanged();
-    void sortOrderChanged();
 
 protected:
     int roleKey(const QByteArray &role) const;

@@ -50,7 +50,7 @@ ApplicationWindow {
     id: window
     visible: true
     title: "Konica Minolta Kunden Dateibank"
-    signal supersignal()
+
 
     property bool pdfButtonEnabled: true
   //  property string MSG
@@ -153,22 +153,7 @@ Button {
 
     }
 }
-Button {
-    text: "Select All"
-    id: selectAll
-    anchors.left: xmlButton.right
-    anchors.verticalCenter: parent.verticalCenter
-    property bool selectedAll: true
-    onClicked:
-    {
-        for (var i=0; i<sourceModel.count; i++)
-        sourceModel.set(i, {"bool": selectedAll})
-        selectedAll = !selectedAll
-        supersignal()
 
-    }
-
-}
         TextField {
             id: searchBox
 
@@ -187,15 +172,15 @@ Button {
 
 
         frameVisible: false
-        sortIndicatorVisible: true
-        sortIndicatorColumn: 2
+        sortIndicatorVisible: false //true
+
         anchors.fill: parent
 
         Layout.minimumWidth: 400
         Layout.minimumHeight: 240
         Layout.preferredWidth: 800
         Layout.preferredHeight: 600
-        //signal activated()
+
 
 
 
@@ -206,29 +191,14 @@ Button {
         movable: false
         resizable: false
         width: 20
-
-
         delegate: CheckBox {
 
                     id: checkBox
-                    signal activated()
 
-                    onClicked:{ console.log("onClicked:" + styleData.row)
-                        sourceModel.set(styleData.row, {"bool": checkBox.checked})
-                            activated()}
-                    Component.onCompleted: {
-                window.supersignal.connect(activated)
-                console.log("onCompleted:" + styleData.row)
-                checked = sourceModel.get(styleData.row).bool}
+
+                    onClicked: sourceModel.set(styleData.row, {"bool": checkBox.checked})
+                    Component.onCompleted: checked = sourceModel.get(styleData.row).bool
                     onVisibleChanged: if (visible) checked = sourceModel.get(styleData.row).bool
-                    onCheckedChanged: console.log("onCheckedChanged" + styleData.row)
-                    onActivated: {
-                checked = sourceModel.get(styleData.row).bool
-                console.log("onActivated" + styleData.row)}
-
-
-                    
-
 
 
 
@@ -257,9 +227,7 @@ Button {
             movable: false
             resizable: false
           //  visible: false
-            width: 82
-        //Component.onCompleted: resizeToContents()
-
+            width: tableView.viewport.width/6
 
 
         }
@@ -279,7 +247,7 @@ Button {
             role: "zip"
             movable: false
             resizable: false
-            width: 50
+            width: tableView.viewport.width / 6
         }
 
         TableViewColumn {
@@ -297,7 +265,7 @@ Button {
             role: "country"
             movable: false
             resizable: false
-            width: 40
+            width: tableView.viewport.width / 6
         }
 
         TableViewColumn {
@@ -315,24 +283,16 @@ Button {
             id: proxyModel
             source: sourceModel.count > 0 ? sourceModel : null
 
-            sortOrder: /*tableView.getColumn(1)*/tableView.sortIndicatorOrder
+            sortOrder: tableView.getColumn(1)//tableView.sortIndicatorOrder
             sortCaseSensitivity: Qt.CaseInsensitive
             sortRole: sourceModel.count > 0 ? tableView.getColumn(tableView.sortIndicatorColumn).role : ""
 
             filterString: "*" + searchBox.text + "*"
             filterSyntax: SortFilterProxyModel.Wildcard
             filterCaseSensitivity: Qt.CaseInsensitive
-            //onSortOrderChanged: console.log("onSortOrderChanged")
-            onSortRoleChanged:  {
-            supersignal()
-            console.log("onSortRoleChanged")}
-            onSortOrderChanged:
-        {
-            supersignal()
-            console.log("onSortOrderChanged")}
+
 
         }
-
 
 
 
