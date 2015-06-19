@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     QSqlQuery query;
     query.exec("select * from vendor");
     QList<QVariantMap> mapCopy;
-    int i=0;
+    int i=1;
     while (query.next()) {
         QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
         newElement.insert("check", "check");

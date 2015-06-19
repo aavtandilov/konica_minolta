@@ -51,12 +51,14 @@ ApplicationWindow {
     visible: true
     title: "Konica Minolta Kunden Dateibank"
     signal supersignal()
-    signal setAllCheckboxes()
+
     property bool pdfButtonEnabled: true
+  //  property string MSG
 
     FileDialog {
         id: fileDialog
         visible: false
+        //modality: fileDialogModal.checked ? Qt.WindowModal : Qt.NonModal
         title: "PDF-Datei auswählen"
         nameFilters: [ "PDF-Datei (*.pdf)" ]
         selectedNameFilter: "All files (*)"
@@ -90,31 +92,12 @@ ApplicationWindow {
             id: pic
             source: "pics/konica.png"
                 }
-
-
         Button {
-            text: "          PDF wählen"
+            text: "Select PDF"
             id: pdfButton
-           // iconSource: "qrc:/pics/pdf.png"
-           // width: 40
-            height: 35
-
-
             anchors.left: pic.right
             anchors.verticalCenter: parent.verticalCenter
             enabled: pdfButtonEnabled
-
-            Image {
-                x: 5
-                y: 5
-                source: "qrc:/pics/pdf.png"
-                height: 25
-                width: 25
-            }
-
-
-
-
             onClicked:
             {
                 fileDialog.open();
@@ -127,10 +110,10 @@ Button {
     anchors.left: pdfButton.right
     anchors.verticalCenter: parent.verticalCenter
     enabled: !pdfButtonEnabled
-
     onClicked:
     {
-
+        if(true/*msg.author!="X"*/)
+             {
             msg.author = { URL: fileDialog.fileUrls.toString()}  // invokes Message::setAuthor()
             for (var i=0; i<sourceModel.count; i++)
             {
@@ -146,19 +129,44 @@ Button {
                 }
             }
 
-            if(msg.author.length > 0) //invokes fileopen
+            //schicken=0
+            //schicken= {name:"Sam", lastName:"Smith", age:2}
+            //msg.author= schicken
+
+            if(msg.author.length > 0)
             {
             pdfButton.enabled = true
             xmlButton.enabled = false
-            }
+}
 
 
+            //console.log(sourceModel.get(10));
+           // var schicken= [["John", "Doe", 46],["John", "Doe", 46]]
 
 
         }
+        //console.log("MSG: " + MSG) //xmlfileDialog.open();
+
+       // if (MSG!=null)
+//
 
 
+    }
+}
+Button {
+    text: "Select All"
+    id: selectAll
+    anchors.left: xmlButton.right
+    anchors.verticalCenter: parent.verticalCenter
+    property bool selectedAll: true
+    onClicked:
+    {
+        for (var i=0; i<sourceModel.count; i++)
+        sourceModel.set(i, {"bool": selectedAll})
+        selectedAll = !selectedAll
+        supersignal()
 
+    }
 
 }
         TextField {
@@ -176,6 +184,8 @@ Button {
 
     TableView {
         id: tableView
+
+
         frameVisible: false
         sortIndicatorVisible: true
         sortIndicatorColumn: 2
@@ -185,67 +195,7 @@ Button {
         Layout.minimumHeight: 240
         Layout.preferredWidth: 800
         Layout.preferredHeight: 600
-
-
-    FocusScope {
-        id: checkboxAllscope
-
-        Accessible.role: Accessible.CheckBox
-
-        property string text: ""
-        property bool checked // required variable
-
-        width: 80
-        height: 50
-
-        CheckBox
-        {
-            id: checkboxAll
-            width: 30
-            height: 30
-            signal setAllCheckboxesLocal()
-            property bool selectedAll: true
-            onClicked:
-            {
-                for (var i=0; i<sourceModel.count; i++)
-                sourceModel.set(i, {"bool": selectedAll})
-                checkboxAll.checkedState = selectedAll ? Qt.Checked : Qt.Unchecked
-                selectedAll = !selectedAll
-                supersignal()
-
-            }
-
-            Component.onCompleted: window.setAllCheckboxes.connect(setAllCheckboxesLocal)
-            property bool firstValue: true
-            onSetAllCheckboxesLocal:
-            {
-                firstValue = sourceModel.get(0).bool
-             console.log("onSetAllCheckboxesLocal")
-
-                for (var i=1; i<sourceModel.count;i++)
-                {
-                    if (firstValue!==sourceModel.get(i).bool)
-                    {
-                        console.log("found")
-                        checkboxAll.checkedState = Qt.PartiallyChecked
-                        break
-                    }
-                    else if(i===sourceModel.count-1)
-                    {
-                        checkboxAll.checkedState = firstValue ? Qt.Checked : Qt.Unchecked
-                    }
-
-
-                }
-
-            }
-
-
-        }
-
-    }
-
-
+        //signal activated()
 
 
 
@@ -258,18 +208,14 @@ Button {
         width: 20
 
 
-
         delegate: CheckBox {
 
                     id: checkBox
                     signal activated()
 
-                    onClicked:{
-
-                console.log("onClicked:" + styleData.row)
+                    onClicked:{ console.log("onClicked:" + styleData.row)
                         sourceModel.set(styleData.row, {"bool": checkBox.checked})
-                            activated()
-            setAllCheckboxes()}
+                            activated()}
                     Component.onCompleted: {
                 window.supersignal.connect(activated)
                 console.log("onCompleted:" + styleData.row)
@@ -296,14 +242,12 @@ Button {
         id: checkBool
         role: "bool"
         width: 40
-        visible: false
     }
 
     TableViewColumn {
     id: indexID
     role: "index"
     width: 40
-        visible: false
 }
 
         TableViewColumn {
@@ -326,8 +270,7 @@ Button {
             role: "name"
             movable: false
             resizable: false
-            width: 200
-        //Component.onCompleted: nameColumn.resizeToContents()
+            width: tableView.viewport.width / 6
         }
 
         TableViewColumn {
@@ -364,8 +307,7 @@ Button {
             movable: false
             resizable: false
             width: tableView.viewport.width / 6
-
-    }
+        }
 
 
 
@@ -383,13 +325,11 @@ Button {
             //onSortOrderChanged: console.log("onSortOrderChanged")
             onSortRoleChanged:  {
             supersignal()
-            //console.log("onSortRoleChanged")
-        }
+            console.log("onSortRoleChanged")}
             onSortOrderChanged:
         {
             supersignal()
-            //console.log("onSortOrderChanged")
-            }
+            console.log("onSortOrderChanged")}
 
         }
 
@@ -399,7 +339,7 @@ Button {
          ListModel {
             id: sourceModel
 
-       /*   ListElement {
+          ListElement {
                 check: ""
                 bool: false
                 index: 0
@@ -409,10 +349,10 @@ Button {
                 city: "Kaiserslautern"
                 country: "USA"
                 street: "2121 K Street"
-            }*/
+            }
 
 
-     //   Component.onCompleted: sourceModel.remove(0)//console.log("ListModel initiate")
+
         }
 
         }
