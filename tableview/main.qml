@@ -44,6 +44,7 @@ import QtQuick.Controls 1.3
 import org.qtproject.example 1.0
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Dialogs 1.2
+import Messager 1.0
 
 
 ApplicationWindow {
@@ -53,6 +54,12 @@ ApplicationWindow {
     signal supersignal()
     signal setAllCheckboxes()
     property bool pdfButtonEnabled: true
+    style: ApplicationWindowStyle {
+        background: Rectangle{
+            color: white
+            anchors.fill: parent
+        }
+    }
 
     FileDialog {
         id: fileDialog
@@ -62,8 +69,10 @@ ApplicationWindow {
         selectedNameFilter: "All files (*)"
         onAccepted: {
             console.log("Accepted: " + fileDialog.fileUrls)
-
-             pdfButtonEnabled = false
+                pdfButton.enabled = false
+                xmlButton.enabled = true
+                pdfButtonEnabled = false
+            console.log("Accepted: " + pdfButtonEnabled)
         }
         onRejected: { console.log("Rejected") }
     }
@@ -101,6 +110,8 @@ ApplicationWindow {
 
 
             anchors.left: pic.right
+            anchors.margins: 20
+
             anchors.verticalCenter: parent.verticalCenter
             enabled: pdfButtonEnabled
 
@@ -121,41 +132,66 @@ ApplicationWindow {
 
             }
         }
+
 Button {
-    text: "Export XML"
+    text: "          Exportieren"
     id: xmlButton
     anchors.left: pdfButton.right
+    anchors.margins: 10
     anchors.verticalCenter: parent.verticalCenter
     enabled: !pdfButtonEnabled
+    height: 35
 
-    onClicked:
+
+    Image {
+        x: 5
+        y: 5
+        source: "qrc:/pics/xml.png"
+        height: 25
+        width: 25
+    }
+
+    Message
     {
+        signal xmlActivated()
+        id: message
 
-            msg.author = { URL: fileDialog.fileUrls.toString()}  // invokes Message::setAuthor()
-            for (var i=0; i<sourceModel.count; i++)
-            {
-                if(sourceModel.get(i).bool)
-                {
-                var schicken= {idnumber: sourceModel.get(i).idnumber,
-                        name: sourceModel.get(i).name,
-                        zip:sourceModel.get(i).zip,
-                        city:sourceModel.get(i).city,
-                        country: sourceModel.get(i).country,
-                        street: sourceModel.get(i).street}
-                msg.author= schicken
-                }
-            }
+     onAuthorChanged:    {
+         console.log("Author Changed")
+         pdfButton.enabled = true
+         xmlButton.enabled = false
+         }
+     onXmlActivated: {
+         //author = { URL: fileDialog.fileUrls.toString()}
+         author = { URL: fileDialog.fileUrls.toString()}  // invokes Message::setAuthor()
+         for (var i=0; i<sourceModel.count; i++)
+         {
+             if(sourceModel.get(i).bool)
+             {
+             var schicken= {idnumber: sourceModel.get(i).idnumber,
+                     name: sourceModel.get(i).name,
+                     zip:sourceModel.get(i).zip,
+                     city:sourceModel.get(i).city,
+                     country: sourceModel.get(i).country,
+                     street: sourceModel.get(i).street}
+             author= schicken
+             }
+         }
 
-            if(msg.author.length > 0) //invokes fileopen
-            {
-            pdfButton.enabled = true
-            xmlButton.enabled = false
-            }
+
+
+         console.log (author) //invokes XML open dialog
 
 
 
 
-        }
+     }
+    //Component.onCompleted: xmlButton.clicked.connect(xmlActivated())//message.xmlActivated.connect(clicked())
+
+    }
+    onClicked: message.xmlActivated()
+
+
 
 
 
@@ -179,12 +215,14 @@ Button {
         frameVisible: false
         sortIndicatorVisible: true
         sortIndicatorColumn: 2
-        anchors.fill: parent
 
+        anchors.fill: parent
+        anchors.margins: 10
         Layout.minimumWidth: 400
         Layout.minimumHeight: 240
         Layout.preferredWidth: 800
         Layout.preferredHeight: 600
+
 
 
     FocusScope {

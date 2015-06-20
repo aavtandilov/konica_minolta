@@ -17,6 +17,7 @@ class Message : public QObject
 public:
 
     QList<QVariantMap> All;
+    QList<QVariantMap> EmptyAll;
     QVariantMap empty;
 
 
@@ -28,7 +29,8 @@ public:
             qDebug() << "hallo";
             qDebug() <<  m_author;
             qDebug() << All;
-            emit authorChanged();
+ //           emit authorChanged();
+
         }
     }
 
@@ -36,11 +38,16 @@ public:
         SaveXMLFile();
         if (filename.isEmpty())
         {
+            qDebug() << "filename is empty";
             for (int i=1;i<All.size();i++)
             All.clear();
+            All = EmptyAll;
 
                 return empty; }//
-        else return m_author;
+        else emit authorChanged();
+            qDebug() << "filename is NOT empty";
+            All = EmptyAll;
+            return m_author;
     }
 
     void SaveXMLFile()
@@ -93,14 +100,18 @@ public:
                 qDebug() << "renamed";
             else
             {
-                qDebug() << "NOT renamed";
+                qDebug() << "NOT renamed: " + cut + " to " + PDFnew+".pdf";
                 int i=1;
                 while(!(QFile::rename(cut, PDFnew+ "-" + QString::number(i) + ".pdf")))
                 {
                     qDebug() << "NOT renamed: " + QString::number(i);
                     i++;
+                    if (i>100)
+                        break;
                 }
                 qDebug() << "renamed"  + QString::number(i);
+                All.clear();
+                qDebug() << All;
             }
     }
 

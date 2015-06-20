@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     }
 
     qmlRegisterType<SortFilterProxyModel>("org.qtproject.example", 1, 0, "SortFilterProxyModel");
+    qmlRegisterType<Message>("Messager", 1, 0, "Message");
     QQmlApplicationEngine engine;
 
     Message msg;
