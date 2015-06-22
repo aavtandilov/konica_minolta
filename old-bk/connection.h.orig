@@ -26,19 +26,18 @@ static bool createConnection()
 
 
     db.setHostName("127.0.0.1"); //local host
-    db.setDatabaseName("konica_minolta"); //DB name
-    db.setUserName("root");
-    db.setPassword("admin");
+       db.setDatabaseName("konica_minolta"); //DB name
+       db.setUserName("root");
+       db.setPassword("admin");
 
-    if (!db.open())
-    {
+    if (!db.open()) {
         QMessageBox::critical(0, qApp->tr("Datenbank ist nicht verfügbar!"),
-                              qApp->tr("Das Programm ist nicht in der Lage, \n"
-                                       "eine Datenbankverbindung herzustellen"), QMessageBox::Ok);
+            qApp->tr("Das Programm ist nicht in der Lage, \n"
+                     "eine Datenbankverbindung herzustellen"), QMessageBox::Ok);
         return false;
     }
 
-    return true;
+     return true;
 }
 
 //! [0]

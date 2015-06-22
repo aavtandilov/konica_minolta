@@ -28,8 +28,7 @@ int main(int argc, char *argv[])
     if (!createConnection()) //attempts to connect to the DB
         return 1;
 
-    if (QCoreApplication::arguments().contains(QLatin1String("--coreprofile")))
-    {
+    if (QCoreApplication::arguments().contains(QLatin1String("--coreprofile"))) {
         QSurfaceFormat fmt;
         fmt.setVersion(4, 4);
         fmt.setProfile(QSurfaceFormat::CoreProfile);
@@ -50,8 +49,7 @@ int main(int argc, char *argv[])
     query.exec("select * from vendor"); //loads DB
     QList<QVariantMap> mapCopy;
     int i=0; // DB entries counter
-    while (query.next())
-    {
+    while (query.next()) {
         QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
         newElement.insert("check", "check");
         newElement.insert("index", i);
@@ -66,7 +64,7 @@ int main(int argc, char *argv[])
         QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement))); //registers function to add elements to the list
         mapCopy.append(newElement);
         i++;
-    }
+          }
 
 
 

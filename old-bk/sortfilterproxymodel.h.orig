@@ -47,8 +47,7 @@ public:
     QString filterString() const;
     void setFilterString(const QString &filter);
 
-    enum FilterSyntax
-    {
+    enum FilterSyntax {
         RegExp,
         Wildcard,
         FixedString

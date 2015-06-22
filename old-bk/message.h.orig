@@ -36,7 +36,7 @@ signals:
     void entryChanged(); //notifies QML code if XML export was successful.
 private:
     QVariantMap m_entry; //one entry
-    QString filename; //filename of the exported XML file
+       QString filename; //filename of the exported XML file
 protected:
     void SaveXMLFile(); // writes XML + moves the PDF
 };
