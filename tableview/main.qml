@@ -56,7 +56,7 @@ ApplicationWindow {
     property bool pdfButtonEnabled: true
     style: ApplicationWindowStyle {
         background: Rectangle{
-            color: white
+
             anchors.fill: parent
         }
     }
@@ -215,14 +215,14 @@ Button {
         frameVisible: false
         sortIndicatorVisible: true
         sortIndicatorColumn: 2
-
+        selectionMode: SelectionMode.NoSelection
         anchors.fill: parent
         anchors.margins: 10
         Layout.minimumWidth: 400
         Layout.minimumHeight: 240
         Layout.preferredWidth: 800
         Layout.preferredHeight: 600
-
+        alternatingRowColors: true
 
 
     FocusScope {
@@ -233,14 +233,14 @@ Button {
         property string text: ""
         property bool checked // required variable
 
-        width: 80
-        height: 50
+        width: 20
+        height: 20
 
         CheckBox
         {
             id: checkboxAll
-            width: 30
-            height: 30
+            width: 20
+            height: 20
             signal setAllCheckboxesLocal()
             property bool selectedAll: true
             onClicked:
@@ -271,6 +271,7 @@ Button {
                     else if(i===sourceModel.count-1)
                     {
                         checkboxAll.checkedState = firstValue ? Qt.Checked : Qt.Unchecked
+                        selectedAll = !firstValue
                     }
 
 
@@ -303,7 +304,6 @@ Button {
                     signal activated()
 
                     onClicked:{
-
                 console.log("onClicked:" + styleData.row)
                         sourceModel.set(styleData.row, {"bool": checkBox.checked})
                             activated()
@@ -422,6 +422,7 @@ Button {
             onSortRoleChanged:  {
             supersignal()
             //console.log("onSortRoleChanged")
+
         }
             onSortOrderChanged:
         {

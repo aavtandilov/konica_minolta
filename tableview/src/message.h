@@ -7,7 +7,9 @@
 #include <QXmlStreamWriter>
 #include <QFileDialog>
 #include <QDebug>
-//#include "CheckedEntries.h"
+#include <QMessageBox>
+#include <QApplication>
+
 
 class Message : public QObject
 {
@@ -35,6 +37,13 @@ public:
     }
 
     QVariantMap author() {
+        if(All.size()==1)
+        {qDebug() << " Nothing chosen"+ QString::number(All.size());
+            QMessageBox::critical(0, qApp->tr("Nichts ausgewählt!"),
+                qApp->tr("Bitte wählen Sie ein oder mehrere Datensätze aus,\n"
+                         "um die zu exportieren"), QMessageBox::Ok);
+        return empty;
+}
         SaveXMLFile();
         if (filename.isEmpty())
         {
