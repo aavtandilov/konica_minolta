@@ -1,3 +1,9 @@
+/****************************************************************************
+** Konica Minolta
+** Artem Avtandilov
+** 22/06/2015
+****************************************************************************/
+
 #include "qtquickcontrolsapplication.h"
 #include "sortfilterproxymodel.h"
 #include <QtQml/qqmlapplicationengine.h>

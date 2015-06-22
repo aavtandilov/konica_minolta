@@ -1,3 +1,9 @@
+/****************************************************************************
+** Konica Minolta
+** Artem Avtandilov
+** 22/06/2015
+****************************************************************************/
+
 #ifndef MESSAGE
 #define MESSAGE
 #include <QMessageBox>
@@ -14,20 +20,20 @@
 class Message : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantMap author READ author WRITE setAuthor NOTIFY authorChanged)
+    Q_PROPERTY(QVariantMap entry READ entry WRITE setEntry NOTIFY entryChanged)
 
 public:
 
     QList<QVariantMap> All;
     QList<QVariantMap> EmptyAll;
     QVariantMap empty;
-    void setAuthor (const QVariantMap&);
-    QVariantMap author();
+    void setEntry (const QVariantMap&);
+    QVariantMap entry();
 
 signals:
-    void authorChanged();
+    void entryChanged();
 private:
-    QVariantMap m_author;
+    QVariantMap m_entry;
        QString filename;
 protected:
     void SaveXMLFile();

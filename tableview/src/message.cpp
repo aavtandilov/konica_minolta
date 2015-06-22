@@ -1,18 +1,24 @@
+/****************************************************************************
+** Konica Minolta
+** Artem Avtandilov
+** 22/06/2015
+****************************************************************************/
+
 #include "message.h"
 
-void Message::setAuthor(const QVariantMap &a) {
-    if (a != m_author) {
-        m_author = a;
-        All.push_back(m_author);
+void Message::setEntry(const QVariantMap &a) {
+    if (a != m_entry) {
+        m_entry = a;
+        All.push_back(m_entry);
         qDebug() << "hallo";
-        qDebug() <<  m_author;
+        qDebug() <<  m_entry;
         qDebug() << All;
-//           emit authorChanged();
+//           emit entryChanged();
 
     }
 }
 
-QVariantMap Message::author() {
+QVariantMap Message::entry() {
     if(All.size()==1)
     {qDebug() << " Nothing chosen"+ QString::number(All.size());
         QMessageBox::critical(0, qApp->tr("Nichts ausgewählt!"),
@@ -29,10 +35,10 @@ QVariantMap Message::author() {
         All = EmptyAll;
 
             return empty; }//
-    else emit authorChanged();
+    else emit entryChanged();
         qDebug() << "filename is NOT empty";
         All = EmptyAll;
-        return m_author;
+        return m_entry;
 }
 
 void Message::SaveXMLFile()
