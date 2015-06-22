@@ -2,6 +2,8 @@
 ** Konica Minolta
 ** Artem Avtandilov
 ** 22/06/2015
+** Modified version of the sorting model. Looks for entries in all columns.
+** Sortable.
 ****************************************************************************/
 
 #ifndef SORTFILTERPROXYMODEL_H

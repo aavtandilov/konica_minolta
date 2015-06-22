@@ -2,6 +2,7 @@
 ** Konica Minolta
 ** Artem Avtandilov
 ** 22/06/2015
+** Core initialization unit. Implements QML initalization
 ****************************************************************************/
 
 #include "qtquickcontrolsapplication.h"
@@ -15,8 +16,8 @@
 #include <QQmlComponent>
 
 #include <QtQml/qqml.h>
-#include "connection.h"
-#include "message.h"
+#include "connection.h" // SQL connection
+#include "message.h" // Message class
 
 
 
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
 {
     QtQuickControlsApplication app(argc, argv);
 
-    if (!createConnection())
+    if (!createConnection()) //attempts to connect to the DB
         return 1;
 
     if (QCoreApplication::arguments().contains(QLatin1String("--coreprofile"))) {
@@ -34,37 +35,33 @@ int main(int argc, char *argv[])
         QSurfaceFormat::setDefaultFormat(fmt);
     }
 
-    qmlRegisterType<SortFilterProxyModel>("org.qtproject.example", 1, 0, "SortFilterProxyModel");
-    qmlRegisterType<Message>("Messager", 1, 0, "Message");
-    QQmlApplicationEngine engine;
+    qmlRegisterType<SortFilterProxyModel>("SortFilter", 1, 0, "SortFilterProxyModel"); //registers the sorting model
+    qmlRegisterType<Message>("Messager", 1, 0, "Message"); //registers the Message class
+    QQmlApplicationEngine engine; //initilizing QML engine
 
     Message msg;
-
-
     engine.rootContext()->setContextProperty("msg", &msg);
 
-    QQmlComponent component(&engine, QUrl("qrc:/main.qml"));
+    QQmlComponent component(&engine, QUrl("qrc:/main.qml")); //loads full QML
 
-
-
-    QObject *object = component.create();
+    QObject *object = component.create(); // start
     QSqlQuery query;
-    query.exec("select * from vendor");
+    query.exec("select * from vendor"); //loads DB
     QList<QVariantMap> mapCopy;
-    int i=0;
+    int i=0; // DB entries counter
     while (query.next()) {
         QVariantMap newElement;  // QVariantMap will implicitly translates into JS-object
         newElement.insert("check", "check");
         newElement.insert("index", i);
-        newElement.insert("bool", false);
-        newElement.insert("idnumber", query.value(0).toString());
-        newElement.insert("name", query.value(1).toString());
-        newElement.insert("zip", query.value(2).toString());
-        newElement.insert("city", query.value(3).toString());
-        newElement.insert("country", query.value(4).toString());
-        newElement.insert("street", query.value(5).toString());
+        newElement.insert("bool", false); //Checked
+        newElement.insert("idnumber", query.value(0).toString()); //Kundennummer
+        newElement.insert("name", query.value(1).toString()); //Kundenname
+        newElement.insert("zip", query.value(2).toString()); //PLZ
+        newElement.insert("city", query.value(3).toString()); //Ort
+        newElement.insert("country", query.value(4).toString()); // Land
+        newElement.insert("street", query.value(5).toString()); //Straße
 
-        QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement)));
+        QMetaObject::invokeMethod(object, "append", Q_ARG(QVariant, QVariant::fromValue(newElement))); //registers function to add elements to the list
         mapCopy.append(newElement);
         i++;
           }

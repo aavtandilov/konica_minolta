@@ -2,66 +2,69 @@
 ** Konica Minolta
 ** Artem Avtandilov
 ** 22/06/2015
+** Implements function from Message classs
 ****************************************************************************/
 
 #include "message.h"
 
-void Message::setEntry(const QVariantMap &a) {
+void Message::setEntry(const QVariantMap &a) //adds one entry to All
+{
     if (a != m_entry) {
         m_entry = a;
         All.push_back(m_entry);
         qDebug() << "hallo";
         qDebug() <<  m_entry;
         qDebug() << All;
-//           emit entryChanged();
+
 
     }
 }
 
-QVariantMap Message::entry() {
-    if(All.size()==1)
-    {qDebug() << " Nothing chosen"+ QString::number(All.size());
+QVariantMap Message::entry() //initializes the XML export in full
+{
+    if(All.size()==1) // if there is no entries selected, one entry is the PDF address
+    {
+        qDebug() << " Nothing chosen"+ QString::number(All.size());
         QMessageBox::critical(0, qApp->tr("Nichts ausgewählt!"),
-            qApp->tr("Bitte wählen Sie ein oder mehrere Datensätze aus,\n"
-                     "um die zu exportieren"), QMessageBox::Ok);
+            qApp->tr("Bitte wählen Sie einen oder mehrere Datensätze aus,\n"
+                     "um diese zu exportieren"), QMessageBox::Ok);
     return empty;
 }
-    Message::SaveXMLFile();
-    if (filename.isEmpty())
+    Message::SaveXMLFile(); // invokes XML writing
+    if (filename.isEmpty()) // if user has not selected any file
     {
         qDebug() << "filename is empty";
         for (int i=1;i<All.size();i++)
-        All.clear();
-        All = EmptyAll;
+        All.clear(); // clears All
+        All = EmptyAll; // complete clear
 
-            return empty; }//
-    else emit entryChanged();
+            return empty; }// returns empty entry
+    else emit entryChanged(); // if the writing was successful, reactivate PDF button, block XML button
         qDebug() << "filename is NOT empty";
-        All = EmptyAll;
-        return m_entry;
+        All = EmptyAll; //clears All for the next export
+        return m_entry; // returns one entry
 }
 
 void Message::SaveXMLFile()
 {
 
     filename = QFileDialog::getSaveFileName(0, QObject::tr("XML Export"), ".", QObject::tr("XML-Datei (*.xml)"));
-    if (filename.isEmpty())
-    {
-        return;
-    }
-     QString cut= All[0].value("URL").toString().mid(8);
+    if (filename.isEmpty()) //if user has not selected anything
+      return;
+
+     QString cut= All[0].value("URL").toString().mid(8); //cuts the unused file://///
 
     qDebug() << "Cut extracted: " + cut;
     qDebug() << filename;
 
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
+    file.open(QIODevice::WriteOnly); //initializes writing
 
     QXmlStreamWriter xmlWriter(&file);
     xmlWriter.setAutoFormatting(true);
-    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartDocument(); //start xml document
 
-    xmlWriter.writeStartElement("KUNDEN");
+    xmlWriter.writeStartElement("KUNDEN"); //main open tag
 
     for (int i=1; i<All.size(); i++)
     {
@@ -74,9 +77,6 @@ void Message::SaveXMLFile()
         xmlWriter.writeTextElement("LAND", All[i].value("country").toString());
         xmlWriter.writeTextElement("STRAßE", All[i].value("street").toString());
         xmlWriter.writeTextElement("PDF", All[0].value("URL").toString().mid(8));
-        //xmlWriter.writeTextElement("QQ", CE.getName(1).toString());
-        qDebug() << "All[1].value(name)";
-        qDebug() << All[1].value("name");
         xmlWriter.writeEndElement(); //END KUNDE
     }
 
@@ -84,10 +84,10 @@ void Message::SaveXMLFile()
         file.close();
 
         QString PDFnew=filename;
-        PDFnew.chop(4);
+        PDFnew.chop(4); //loads destination + same filename
 
 
-        if(QFile::rename(cut, PDFnew+".pdf"))
+        if(QFile::rename(cut, PDFnew+".pdf")) //renames
             qDebug() << "renamed";
         else
         {

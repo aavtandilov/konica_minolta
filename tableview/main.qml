@@ -2,12 +2,13 @@
 ** Konica Minolta
 ** Artem Avtandilov
 ** 22/06/2015
+** Main interface file. sDescribes all interface features. JS in QML
 ****************************************************************************/
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3
-import org.qtproject.example 1.0
+import SortFilter 1.0
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Dialogs 1.2
 import Messager 1.0
@@ -152,7 +153,7 @@ Button {
 
 
      }
-    //Component.onCompleted: xmlButton.clicked.connect(xmlActivated())//message.xmlActivated.connect(clicked())
+
 
     }
     onClicked: message.xmlActivated()
@@ -316,9 +317,9 @@ Button {
             role: "idnumber"
             movable: false
             resizable: false
-          //  visible: false
+
             width: 82
-        //Component.onCompleted: resizeToContents()
+
 
 
 
@@ -331,7 +332,7 @@ Button {
             movable: false
             resizable: false
             width: 200
-        //Component.onCompleted: nameColumn.resizeToContents()
+
         }
 
         TableViewColumn {
@@ -377,7 +378,7 @@ Button {
             id: proxyModel
             source: sourceModel.count > 0 ? sourceModel : null
 
-            sortOrder: /*tableView.getColumn(1)*/tableView.sortIndicatorOrder
+            sortOrder: tableView.sortIndicatorOrder
             sortCaseSensitivity: Qt.CaseInsensitive
             sortRole: sourceModel.count > 0 ? tableView.getColumn(tableView.sortIndicatorColumn).role : ""
 
@@ -416,8 +417,6 @@ Button {
                 street: "2121 K Street"
             }*/
 
-
-     //   Component.onCompleted: sourceModel.remove(0)//console.log("ListModel initiate")
         }
 
         }
