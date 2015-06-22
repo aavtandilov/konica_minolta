@@ -7,4 +7,5 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PWD/sortfilterproxymodel.cpp
+    $$PWD/sortfilterproxymodel.cpp \
+    $$PWD/message.cpp
